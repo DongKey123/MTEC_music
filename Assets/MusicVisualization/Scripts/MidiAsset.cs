@@ -68,4 +68,12 @@ public class MidiAsset : ScriptableObject //MonoBehavoir  : 엔진상에서 동�
             return (int)(60000000 / _midiFile.Time.Tempo);
         }
     }
+
+    public MidiTrack[] tracks
+    {
+        get
+        {
+            return _midiFile.Tracks.ToArray();
+        }
+    }
 }
