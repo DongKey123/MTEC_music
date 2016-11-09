@@ -19,23 +19,25 @@ public class MidiPlayer : MonoBehaviour {
     private MidiTrack[] _tracks;
     private int[] _noteIndex;
     private float _pulseTime;
+    private MidiEventTrigger[] _triggers;
 
     // Use this for initialization
     void Start () {
     }
-	
-	// Update is called once per frame
-	void Update () {
-	    if(_isPlaying == true)
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (_isPlaying == true)
         {
             //audio delay
-            if(_audioDelayTime > 0f)
+            if (_audioDelayTime > 0f)
             {
                 _audioDelayTime -= Time.deltaTime;
             }
             else
             {
-                if(_audioStarted == false)
+                if (_audioStarted == false)
                 {
                     _audioStarted = true;
                     if (audioSource != null)
@@ -46,57 +48,59 @@ public class MidiPlayer : MonoBehaviour {
             }
             //midi delay
             if (_midiDelayTime > 0f)
-            {
                 _midiDelayTime -= Time.deltaTime;
-            }
             else
             {
-                _playTime += Time.deltaTime * playSpeed;
-                for(int i =0;i<_tracks.Length;i++)
+                _playTime += (Time.deltaTime * playSpeed);
+                for (int i = 0; i < _tracks.Length; i++)
                 {
-                    for(int j =_noteIndex[i];j<_tracks[i].Number;j++)
+                    int noteCount = _tracks[i].Notes.Count;
+                    for (int j = _noteIndex[i]; j < noteCount; j++)
                     {
-                        MidiNote note = _tracks[i].Notes[_noteIndex[i]];
+                        MidiNote note = _tracks[i].Notes[j];
                         float sTime = note.StartTime * _pulseTime;
                         float eTime = note.EndTime * _pulseTime;
-                        if (_playTime < sTime)
-                        {
-                            break;
-                        }
 
-                       // Debug.Log(note.Number);
+                        if (_playTime < sTime)
+                            break;
+
+                        //Midi Event Trigger Call
+                        foreach (MidiEventTrigger trigger in _triggers)
+                        {
+                            trigger.NoteOn(_tracks[i].Instrument, note.Number);
+                        }
 
                         if (_playTime > eTime)
                         {
                             _noteIndex[i] = j + 1;
+                            //Midi Event Trigger Call
+                            foreach (MidiEventTrigger trigger in _triggers)
+                            {
+                                trigger.NoteOff(_tracks[i].Instrument, note.Number);
+                            }
                         }
                     }
 
                 }
             }
         }
-	}
+    }
 
     public void Play()
     {
         if (midi == null)
             return;
 
-        if (music != null && audioSource != null)
-        {
-            audioSource.clip = music;
-        }
-
-
         _isPlaying = true;
         _playTime = 0f;
         _totalTime = midi.totalTime;
-        if(playDelayTime == 0)
+        _pulseTime = midi.pulseTime;
+        if (playDelayTime == 0f)
         {
-            _audioDelayTime = 0;
-            _midiDelayTime = 0;
+            _audioDelayTime = 0f;
+            _midiDelayTime = 0f;
         }
-        else if (playDelayTime > 0)
+        else if (playDelayTime > 0f)
         {
             _audioDelayTime = playDelayTime;
             _midiDelayTime = 0f;
@@ -111,34 +115,56 @@ public class MidiPlayer : MonoBehaviour {
         _noteIndex = new int[_tracks.Length];
         for (int i = 0; i < _noteIndex.Length; i++)
             _noteIndex[i] = 0;
+
+        //Find Midi Event Trigger
+        _triggers = GameObject.FindObjectsOfType<MidiEventTrigger>();
+        Debug.Log(_triggers.Length);
+
+        //Midi Event Trigger call
+        foreach (MidiEventTrigger trigger in _triggers)
+        {
+            trigger.Play();
+        }
+
     }
 
     public void Pause()
     {
-        if(audioSource != null)
-        {
-            audioSource.Pause();
-        }
         _isPlaying = false;
+        if (audioSource != null)
+            audioSource.Pause();
+
+        foreach (MidiEventTrigger trigger in _triggers)
+        {
+            trigger.Pause();
+        }
     }
 
     public void Resume()
     {
-        if (audioSource != null)
-        {
-            audioSource.UnPause();
-        }
         _isPlaying = true;
+        if (audioSource != null)
+            audioSource.UnPause();
+
+        foreach (MidiEventTrigger trigger in _triggers)
+        {
+            trigger.Resume();
+        }
     }
 
     public void Stop()
     {
-        if (audioSource != null)
-        {
-            audioSource.Stop();
-        }
         _isPlaying = false;
         _playTime = 0f;
+        _audioStarted = false;
+
+        if (audioSource != null)
+            audioSource.Stop();
+
+        foreach (MidiEventTrigger trigger in _triggers)
+        {
+            trigger.Stop();
+        }
     }
 
 
