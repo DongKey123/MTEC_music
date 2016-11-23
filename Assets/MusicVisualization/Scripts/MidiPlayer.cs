@@ -23,6 +23,8 @@ public class MidiPlayer : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        if(music != null)
+            audioSource.clip = music;
     }
 
     // Update is called once per frame
