@@ -5,6 +5,53 @@ public class MidiAsset : ScriptableObject //MonoBehavoir  : 엔진상에서 동�
 {
     [SerializeField]
     private MidiFile _midiFile;
+    private bool[] _EnableInstrumentFilters;
+    private bool[] _EnableNoteFilters;
+
+    public MidiFile GetMidiFile()
+    {
+        return _midiFile;
+    }
+
+    public bool[] GetInstrumentFilter()
+    {
+        _EnableInstrumentFilters = new bool[129];
+        //Initalize
+        for (int i=0;i< _EnableInstrumentFilters.Length;++i)
+        {
+            _EnableInstrumentFilters[i] = false;
+        }
+
+        for(int i =0;i<tracks.Length;++i)
+        {
+            Debug.Log(tracks[i].Instrument);
+            _EnableInstrumentFilters[tracks[i].Instrument] = true;
+        }
+
+        return _EnableInstrumentFilters;
+    }
+
+    public bool[] GetNoteFilter()
+    {
+        _EnableNoteFilters = new bool[128];
+        //Initalize
+        for (int i = 0; i < _EnableNoteFilters.Length; ++i)
+        {
+            _EnableNoteFilters[i] = false;
+        }
+
+        for (int i = 0; i < tracks.Length; ++i)
+        {
+            MidiNote[] notes = tracks[i].Notes.ToArray();
+            for (int j = 0; j < notes.Length; j++)
+            {
+                _EnableNoteFilters[notes[j].Number] = true;
+            }
+            
+        }
+
+        return _EnableNoteFilters;
+    }
 
 
     public void FileLoad(string path)

@@ -30,6 +30,8 @@ public class MidiPlayer : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        
+
         if (_isPlaying == true)
         {
             //audio delay

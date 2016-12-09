@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 public class MidiEventTrigger : MonoBehaviour
 {
-
+    public MidiPlayer midiPlayer;
     public bool[] instrumentFilter = new bool[129];
     public bool[] noteFilter = new bool[128];
 
