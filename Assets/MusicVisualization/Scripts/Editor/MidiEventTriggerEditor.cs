@@ -7,6 +7,7 @@ using UnityEditor.SceneManagement;
 public class MidiEventTriggerEditor : Editor {
 
     SerializedProperty midiPlayer;
+    SerializedProperty notes;
     private bool foldout = false;
     private bool foldout2 = false;
     private bool[] _enableInstrumentFilters;
@@ -18,6 +19,7 @@ public class MidiEventTriggerEditor : Editor {
     void OnEnable()
     {
         midiPlayer = serializedObject.FindProperty("midiPlayer");
+        notes = serializedObject.FindProperty("notes");
         eventNoteOn = serializedObject.FindProperty("eventNoteOn");
         eventNoteOff = serializedObject.FindProperty("eventNoteOff");
 
@@ -31,6 +33,7 @@ public class MidiEventTriggerEditor : Editor {
     {
         serializedObject.Update();
         EditorGUILayout.PropertyField(midiPlayer);
+        EditorGUILayout.PropertyField(notes,true);
         EditorGUILayout.PropertyField(eventNoteOn, new GUIContent("Note On"));
         EditorGUILayout.PropertyField(eventNoteOff, new GUIContent("Note Off"));
 
@@ -81,7 +84,8 @@ public class MidiEventTriggerEditor : Editor {
             {
                 for (int i = 0; i < 128; i++)
                 {
-                    trigger.noteFilter[i] = true;
+                    if(_enableNoteFilters[i] == true)
+                        trigger.noteFilter[i] = true;
                 }
             }
             if (GUILayout.Button("Clear All"))
@@ -101,7 +105,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     if ((int)i % 12 == 0)
                     {
-                        if(trigger.noteFilter[i] == false)
+                        if(trigger.noteFilter[i] == false && _enableNoteFilters[i] == true)
                         {
                             allTrue = false;
                         }
@@ -112,7 +116,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     for (int i = 0; i < 128; i++)
                     {
-                        if ((int)i % 12 == 0)
+                        if ((int)i % 12 == 0 )
                         {
                             trigger.noteFilter[i] = false;
                         }
@@ -122,7 +126,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     for (int i = 0; i < 128; i++)
                     {
-                        if ((int)i % 12 == 0)
+                        if ((int)i % 12 == 0 && _enableNoteFilters[i] == true)
                         {
                             trigger.noteFilter[i] = true;
                         }
@@ -137,7 +141,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     if ((int)i % 12 == 1)
                     {
-                        if (trigger.noteFilter[i] == false)
+                        if (trigger.noteFilter[i] == false && _enableNoteFilters[i] == true)
                         {
                             allTrue = false;
                         }
@@ -158,7 +162,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     for (int i = 0; i < 128; i++)
                     {
-                        if ((int)i % 12 == 1)
+                        if ((int)i % 12 == 1 && _enableNoteFilters[i] == true)
                         {
                             trigger.noteFilter[i] = true;
                         }
@@ -173,7 +177,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     if ((int)i % 12 == 2)
                     {
-                        if (trigger.noteFilter[i] == false)
+                        if (trigger.noteFilter[i] == false && _enableNoteFilters[i] == true)
                         {
                             allTrue = false;
                         }
@@ -194,7 +198,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     for (int i = 0; i < 128; i++)
                     {
-                        if ((int)i % 12 == 2)
+                        if ((int)i % 12 == 2 && _enableNoteFilters[i] == true)
                         {
                             trigger.noteFilter[i] = true;
                         }
@@ -209,7 +213,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     if ((int)i % 12 == 3)
                     {
-                        if (trigger.noteFilter[i] == false)
+                        if (trigger.noteFilter[i] == false && _enableNoteFilters[i] == true)
                         {
                             allTrue = false;
                         }
@@ -230,7 +234,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     for (int i = 0; i < 128; i++)
                     {
-                        if ((int)i % 12 == 3)
+                        if ((int)i % 12 == 3 && _enableNoteFilters[i] == true)
                         {
                             trigger.noteFilter[i] = true;
                         }
@@ -245,7 +249,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     if ((int)i % 12 == 4)
                     {
-                        if (trigger.noteFilter[i] == false)
+                        if (trigger.noteFilter[i] == false && _enableNoteFilters[i] == true)
                         {
                             allTrue = false;
                         }
@@ -266,7 +270,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     for (int i = 0; i < 128; i++)
                     {
-                        if ((int)i % 12 == 4)
+                        if ((int)i % 12 == 4 && _enableNoteFilters[i] == true)
                         {
                             trigger.noteFilter[i] = true;
                         }
@@ -281,7 +285,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     if ((int)i % 12 == 5)
                     {
-                        if (trigger.noteFilter[i] == false)
+                        if (trigger.noteFilter[i] == false && _enableNoteFilters[i] == true)
                         {
                             allTrue = false;
                         }
@@ -302,7 +306,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     for (int i = 0; i < 128; i++)
                     {
-                        if ((int)i % 12 == 5)
+                        if ((int)i % 12 == 5 && _enableNoteFilters[i] == true)
                         {
                             trigger.noteFilter[i] = true;
                         }
@@ -317,7 +321,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     if ((int)i % 12 == 6)
                     {
-                        if (trigger.noteFilter[i] == false)
+                        if (trigger.noteFilter[i] == false && _enableNoteFilters[i] == true)
                         {
                             allTrue = false;
                         }
@@ -338,7 +342,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     for (int i = 0; i < 128; i++)
                     {
-                        if ((int)i % 12 == 6)
+                        if ((int)i % 12 == 6 && _enableNoteFilters[i] == true)
                         {
                             trigger.noteFilter[i] = true;
                         }
@@ -353,7 +357,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     if ((int)i % 12 == 7)
                     {
-                        if (trigger.noteFilter[i] == false)
+                        if (trigger.noteFilter[i] == false && _enableNoteFilters[i] == true)
                         {
                             allTrue = false;
                         }
@@ -374,7 +378,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     for (int i = 0; i < 128; i++)
                     {
-                        if ((int)i % 12 == 7)
+                        if ((int)i % 12 == 7 && _enableNoteFilters[i] == true)
                         {
                             trigger.noteFilter[i] = true;
                         }
@@ -389,7 +393,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     if ((int)i % 12 == 8)
                     {
-                        if (trigger.noteFilter[i] == false)
+                        if (trigger.noteFilter[i] == false && _enableNoteFilters[i] == true)
                         {
                             allTrue = false;
                         }
@@ -410,7 +414,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     for (int i = 0; i < 128; i++)
                     {
-                        if ((int)i % 12 == 8)
+                        if ((int)i % 12 == 8 && _enableNoteFilters[i] == true)
                         {
                             trigger.noteFilter[i] = true;
                         }
@@ -425,7 +429,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     if ((int)i % 12 == 9)
                     {
-                        if (trigger.noteFilter[i] == false)
+                        if (trigger.noteFilter[i] == false && _enableNoteFilters[i] == true)
                         {
                             allTrue = false;
                         }
@@ -446,7 +450,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     for (int i = 0; i < 128; i++)
                     {
-                        if ((int)i % 12 == 9)
+                        if ((int)i % 12 == 9 && _enableNoteFilters[i] == true)
                         {
                             trigger.noteFilter[i] = true;
                         }
@@ -461,7 +465,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     if ((int)i % 12 == 10)
                     {
-                        if (trigger.noteFilter[i] == false)
+                        if (trigger.noteFilter[i] == false && _enableNoteFilters[i] == true)
                         {
                             allTrue = false;
                         }
@@ -482,7 +486,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     for (int i = 0; i < 128; i++)
                     {
-                        if ((int)i % 12 == 10)
+                        if ((int)i % 12 == 10 && _enableNoteFilters[i] == true)
                         {
                             trigger.noteFilter[i] = true;
                         }
@@ -497,7 +501,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     if ((int)i % 12 == 11)
                     {
-                        if (trigger.noteFilter[i] == false)
+                        if (trigger.noteFilter[i] == false && _enableNoteFilters[i] == true)
                         {
                             allTrue = false;
                         }
@@ -518,7 +522,7 @@ public class MidiEventTriggerEditor : Editor {
                 {
                     for (int i = 0; i < 128; i++)
                     {
-                        if ((int)i % 12 == 11)
+                        if ((int)i % 12 == 11 && _enableNoteFilters[i] == true)
                         {
                             trigger.noteFilter[i] = true;
                         }
@@ -531,16 +535,36 @@ public class MidiEventTriggerEditor : Editor {
 
             for (int i = 0; i < 128; i++)
             {
+                if(i % 12 == 0)
+                {
+                    GUILayout.BeginHorizontal();
+                }
+
                 //if (_enableNoteFilters[i] == false)
                 //{
                 //    GUILayout.Label(NoteNumberToString(i));
                 //}
 
-                bool newValue = GUILayout.Toggle(trigger.noteFilter[i], NoteNumberToString(i));
-                if (newValue != trigger.noteFilter[i])
+                if(_enableNoteFilters[i] == true)
                 {
-                    trigger.noteFilter[i] = newValue;
-                    EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+                    bool newValue = GUILayout.Toggle(trigger.noteFilter[i], NoteNumberToString(i));
+                    if (newValue != trigger.noteFilter[i])
+                    {
+                        trigger.noteFilter[i] = newValue;
+                        EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+                    }
+                }
+                else
+                {
+                    GUIStyle style = new GUIStyle(GUI.skin.toggle);
+                    style.normal.textColor = Color.gray;
+                    bool newValue = GUILayout.Toggle(trigger.noteFilter[i], NoteNumberToString(i), style);
+                }
+                
+
+                if (i % 12 == 11)
+                {
+                    GUILayout.EndHorizontal();
                 }
             }
         }
